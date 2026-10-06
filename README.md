@@ -42,7 +42,6 @@ Install FFmpeg and FLAC according to your operating system or container environm
 
 ## Installation
 
-### Via npm / pnpm
 ```bash
 # Using npm
 npm install recaptcha-playwright
@@ -53,14 +52,6 @@ pnpm add recaptcha-playwright
 # Using yarn
 yarn add recaptcha-playwright
 ```
-
-### Via GitHub (Alternative)
-You can also install directly from GitHub without waiting for npm:
-```bash
-pnpm add github:hiiidev/recaptcha-playwright
-```
-
-> **Zero Build Configuration Needed**: Pre-compiled dual-format bundles (`dist/index.js` for ESM and `dist/index.cjs` for CommonJS) are tracked directly in the repository, making it ready to use out-of-the-box.
 
 ---
 
