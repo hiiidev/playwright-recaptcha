@@ -1,0 +1,61 @@
+{
+  "name": "recaptcha-playwright",
+  "version": "1.0.0",
+  "description": "A Node.js library for solving reCAPTCHA v2 and v3 with Playwright",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./recaptchav2": {
+      "types": "./src/recaptchav2/index.ts",
+      "import": "./dist/recaptchav2/index.js",
+      "require": "./dist/recaptchav2/index.cjs"
+    },
+    "./recaptchav3": {
+      "types": "./src/recaptchav3/index.ts",
+      "import": "./dist/recaptchav3/index.js",
+      "require": "./dist/recaptchav3/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts src/recaptchav2/index.ts src/recaptchav3/index.ts --format esm,cjs --clean",
+    "test": "node --test tests/unit.test.ts"
+  },
+  "peerDependencies": {
+    "playwright": ">=1.33.0"
+  },
+  "keywords": [
+    "playwright",
+    "recaptcha",
+    "recaptcha-solver",
+    "recaptchav2",
+    "recaptchav3",
+    "capsolver",
+    "camoufox",
+    "speech-to-text",
+    "audio-challenge"
+  ],
+  "author": "hiiidev",
+  "license": "MIT",
+  "dependencies": {
+    "@camoufox/camoufox": "^0.5.7",
+    "playwright": "^1.63.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "tsup": "^8.5.1",
+    "typescript": "^7.0.2"
+  }
+}
