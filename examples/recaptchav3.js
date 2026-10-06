@@ -1,5 +1,5 @@
 import { chromium } from 'playwright';
-import { recaptchav3 } from '../src/index.ts';
+import { recaptchav3 } from 'recaptcha-playwright';
 
 async function main() {
   const browser = await chromium.launch({ headless: false });

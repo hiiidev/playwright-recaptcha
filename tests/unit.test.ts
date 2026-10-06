@@ -12,7 +12,7 @@ import {
   getTranslationsPattern,
   RecaptchaBox,
   convertMp3ToFlac,
-} from '../src/index.ts';
+} from 'recaptcha-playwright';
 import { spawn } from 'child_process';
 
 describe('Error Classes', () => {
@@ -164,7 +164,7 @@ describe('RecaptchaV3Solver', () => {
       waitForTimeout: (ms: number) => new Promise((r) => setTimeout(r, ms)),
     } as any;
 
-    const { RecaptchaV3Solver } = await import('../src/index.ts');
+    const { RecaptchaV3Solver } = await import('recaptcha-playwright');
     const solver = new RecaptchaV3Solver(mockPage, { timeout: 2 });
 
     assert.ok(responseHandler !== null);
@@ -194,7 +194,7 @@ describe('RecaptchaV3Solver', () => {
       waitForTimeout: (ms: number) => new Promise((r) => setTimeout(r, ms)),
     } as any;
 
-    const { RecaptchaV3Solver } = await import('../src/index.ts');
+    const { RecaptchaV3Solver } = await import('recaptcha-playwright');
     const solver = new RecaptchaV3Solver(mockPage, { timeout: 0.1 });
 
     await assert.rejects(
@@ -218,7 +218,7 @@ describe('RecaptchaV2Solver', () => {
       waitForTimeout: (ms: number) => new Promise((r) => setTimeout(r, ms)),
     } as any;
 
-    const { RecaptchaV2Solver } = await import('../src/index.ts');
+    const { RecaptchaV2Solver } = await import('recaptcha-playwright');
     const solver = new RecaptchaV2Solver(mockPage);
 
     assert.ok(responseHandler !== null);
