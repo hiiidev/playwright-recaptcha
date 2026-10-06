@@ -1,8 +1,4 @@
 import {
-  RecaptchaV3Solver,
-  recaptchav3_exports
-} from "./chunk-KWFKRBPX.js";
-import {
   ELEMENT_TRANSLATIONS,
   OBJECT_TRANSLATIONS,
   RecaptchaBox,
@@ -12,6 +8,10 @@ import {
   recaptchav2_exports,
   transcribeWithGoogle
 } from "./chunk-IW2TCO2W.js";
+import {
+  RecaptchaV3Solver,
+  recaptchav3_exports
+} from "./chunk-KWFKRBPX.js";
 import {
   CapSolverError,
   RecaptchaError,

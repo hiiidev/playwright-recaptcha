@@ -5,9 +5,9 @@ A robust, modern Node.js / TypeScript library for solving and intercepting **Goo
 Ported and enhanced from the popular Python library [Xewdy444/Playwright-reCAPTCHA](https://github.com/Xewdy444/Playwright-reCAPTCHA).
 
 > [!IMPORTANT]
-> **System Requirements: FFmpeg & FLAC are Required**  
-> To solve reCAPTCHA v2 **audio challenges**, this library uses your system's `ffmpeg` binary to transcode and resample MP3 audio streams into 16kHz mono FLAC for Google's Speech Recognition service.  
-> You **must** have `ffmpeg` and `flac` tools installed and accessible in your system's `PATH`.
+> **System Requirements**  
+> - **Node.js**: Minimum requirement is **`Node.js >= 18.0.0`**.  
+> - **FFmpeg & FLAC**: To solve reCAPTCHA v2 **audio challenges**, this library uses your system's `ffmpeg` binary to transcode and resample MP3 audio streams into 16kHz mono FLAC for Google's Speech Recognition service. You **must** have `ffmpeg` and `flac` tools installed and accessible in your system's `PATH`.
 
 ---
 
@@ -73,8 +73,8 @@ pnpm add github:hiiidev/recaptcha-playwright
   - **Direct Checkbox Pass**: Intercepts the response immediately if clicking the checkbox passes without a challenge.
 - **reCAPTCHA v3 Interceptor**:
   - Hooks into browser network requests (`/recaptcha/api2/reload` and `/enterprise/reload`) to intercept the valid `g-recaptcha-response` token.
-  - Reaches top human scores (**0.9 score**) when paired with anti-detect browsers like Camoufox.
-- **Anti-Detect Ready**: Tested and fully compatible with [@camoufox/camoufox](https://github.com/daijro/camoufox) and rotating residential proxies.
+  - Automatically captures high-trust tokens on target pages.
+- **Proxy & Stealth Ready**: Compatible with residential/datacenter proxies and custom Playwright browser contexts.
 - **Multilingual Support**: Supports 9 languages out-of-the-box (English, Chinese, Russian, German, French, Spanish, Italian, Dutch, Portuguese).
 - **TypeScript First**: Full typing support, ESM & CJS exports, and `await using` (Disposable) support.
 
@@ -122,23 +122,21 @@ try {
 
 ---
 
-### 2. reCAPTCHA v2 with Camoufox Anti-Detect Browser & Proxy (Recommended)
+### 2. reCAPTCHA v2 with Proxies & Chromium Configuration
 
-When running headless or automation browsers, Google often flags standard browser instances with `"Try again later"`. Pairing with Camoufox and residential proxies resolves this:
+When running scrapers or automation bots, you can launch Chromium with proxy support:
 
 ```javascript
-import { Camoufox } from '@camoufox/camoufox';
+import { chromium } from 'playwright';
 import { recaptchav2 } from 'recaptcha-playwright';
 
-const browser = await Camoufox({
+const browser = await chromium.launch({
   headless: false,
-  geoip: false,
   proxy: {
     server: 'http://proxy-host:port',
     username: 'proxy-username',
     password: 'proxy-password',
   },
-  humanize: true, // Realistic mouse trajectories
 });
 
 const page = await browser.newPage();
@@ -156,19 +154,15 @@ try {
 
 ---
 
-### 3. reCAPTCHA v3 (Intercepting Token & 0.9 Score)
+### 3. reCAPTCHA v3 (Intercepting Token)
 
 Always initialize the solver **before** navigating to the target page to ensure the initial reload request is intercepted:
 
 ```javascript
-import { Camoufox } from '@camoufox/camoufox';
+import { chromium } from 'playwright';
 import { recaptchav3 } from 'recaptcha-playwright';
 
-const browser = await Camoufox({
-  headless: false,
-  proxy: { server: 'http://proxy-host:port', ... },
-});
-
+const browser = await chromium.launch({ headless: false });
 const page = await browser.newPage();
 
 // 1. Initialize solver listener before navigation
@@ -182,9 +176,11 @@ try {
   const token = await solver.solveRecaptcha();
   console.log('Captured v3 Token:', token);
 
-  // Read detected score
-  const score = await page.getByText(/Your score is: (\d\.\d)/).innerText();
-  console.log('Google v3 Score:', score); // Output: "Your score is: 0.9"
+  // Read detected score if available
+  const scoreLocator = page.getByText(/Your score is: (\d\.\d)/);
+  if (await scoreLocator.isVisible({ timeout: 5000 }).catch(() => false)) {
+    console.log(await scoreLocator.innerText());
+  }
 } finally {
   solver.close();
   await browser.close();
